@@ -51,7 +51,7 @@ Routes:
     
       Before performing the removal, a validation must be made if the `id` belongs to a task saved in the database.
     
-- 'PATCH - /tasks/:id/complete'
+- `PATCH - /tasks/:id/complete`
     
       You can mark the task as complete or not. This means that if the task is complete, it should return to its "normal" state.
           
