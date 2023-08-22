@@ -10,62 +10,72 @@ export const routes = [
     method: "POST",
     path: buildRoutePath("/tasks"),
     handler: (req, res) => {
-      const {title, description} = req.body
+      const { title, description } = req.body;
       const task = {
-        id : randomUUID(),
+        id: randomUUID(),
         title,
         description,
         completed_at: null,
         created_at: currentDate,
         updated_at: null,
-      }
-      db.insert("tasks", task)
+      };
+      db.insert("tasks", task);
       return res.writeHead(201).end();
-    }
+    },
   },
   {
     method: "GET",
     path: buildRoutePath("/tasks"),
     handler(req, res) {
-      const {search} = req.query
-      const tasks = db.select("tasks", search ? {
-        title : search,
-        description: search
-       }: null)
+      const { search } = req.query;
+      const tasks = db.select(
+        "tasks",
+        search
+          ? {
+              title: search,
+              description: search,
+            }
+          : null
+      );
       return res.end(JSON.stringify(tasks));
-    }
+    },
   },
   {
     method: "DELETE",
     path: buildRoutePath("/tasks/:id"),
-    handler(req,res) {
+    handler(req, res) {
       const { id } = req.params;
-      db.delete("tasks", id )
+      db.delete("tasks", id);
       return res.writeHead(204).end();
-    }
+    },
   },
   {
-    method:"PUT",
+    method: "PUT",
     path: buildRoutePath("/tasks/:id"),
-    handler(req,res) {
-      const {id} = req.params
+    handler(req, res) {
+      const { id } = req.params;
 
-      const {title,description} = req.body
-      const updated_at = currentDate
+      const title = req.body.title ?? null;
+      const description = req.body.description ?? null;
 
-      db.updateData("tasks", id, title, description, updated_at)
-      return res.writeHead(204).end()
-    }
+      // const {title,description} = req.body
+      const updated_at = currentDate;
+      console.log(title);
+      console.log(description);
+
+      db.updateData("tasks", id, title, description, updated_at);
+      return res.writeHead(204).end();
+    },
   },
   {
     method: "PATCH",
     path: buildRoutePath("/tasks/:id/complete"),
-    handler(req,res) {
-      const {id} = req.params
-      const completed_at = currentDate
+    handler(req, res) {
+      const { id } = req.params;
+      const completed_at = currentDate;
 
-      db.completeTask("tasks", id, completed_at)
-      return res.writeHead(204).end()
-    }
-  }
-]
+      db.completeTask("tasks", id, completed_at);
+      return res.writeHead(204).end();
+    },
+  },
+];
