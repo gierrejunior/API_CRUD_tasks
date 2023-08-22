@@ -36,8 +36,14 @@ export class Database {
   select(table) {
     let data = this.#database[table] ?? []; // "??" O operador de coalescência nula (??) é usado para fornecer um valor padrão caso o valor à esquerda do operador seja null ou undefined. Se o valor à esquerda não for null nem undefined, o operador retornará o valor à esquerda.
 
-    return data;
-  }
+    if (search) {
+      data = data.filter( row => {
+        return Object.entries(search).some(([key, value]) => {
+          return row[key].toLowerCase().includes(value.toLowerCase())
+      })
+    })
+  } return data;
+}
 
   delete(table, id) {
     const rowIndex = this.#database[table].findIndex((row) => row["id"] === id);

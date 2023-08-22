@@ -1,7 +1,7 @@
 import http from "node:http";
 import { json } from "./middlewares/json.js"; 
 import { routes } from "./route.js";
-import { log } from "node:console";
+import { extractQueryParams } from "./utils/extract-query-params.js";
 
 const server = http.createServer(async(req, res) => {
   const {method, url} = req
@@ -10,16 +10,19 @@ const server = http.createServer(async(req, res) => {
   
   
   const route = routes.find(route => {
-    console.log(route.method === method);
-    console.log(route.path.test(url));
-    console.log(" ");
     return route.method === method && route.path.test(url)
   })
 
   if (route){
-    const routeParams = req.url.match(route.path)
-    const {...params } = routeParams.groups
-    req.params = params
+    const routeParams = req.url.match(route.path);
+    const { query, ...params } = routeParams.groups;
+    req.params = params;
+    req.query = query ? extractQueryParams(query) : {}; // operador condicional ternário
+    // Se query for avaliado como verdadeiro (ou seja, não é nulo, vazio ou avaliado como falso em um contexto booleano), a função extractQueryParams(query) será chamada.
+    // Se query for avaliado como falso (ou seja, é nulo, vazio ou avaliado como falso em um contexto booleano), um objeto vazio {} será atribuído a req.query.
+    req.params = { ...routeParams.groups };
+    //Está criando uma cópia independente do objeto routeParams.group usando o operador de propagação (...).
+    // Isso é feito para garantir que as modificações feitas em params não afetem o objeto original routeParams.group
 
     return route.handler(req, res);
   }
