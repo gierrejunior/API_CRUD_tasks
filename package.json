@@ -2,12 +2,23 @@
   "name": "api_tasks_crud",
   "type": "module",
   "version": "1.0.0",
-  "description": "",
+  "description": "API, made in NODEJs, with where it has with",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gierrejunior/API_CRUD_tasks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gierrejunior/API_CRUD_tasks/issues"
+  },
+  "homepage": "https://github.com/gierrejunior/API_CRUD_tasks#readme",
+  "dependencies": {
+    "csv-parser": "^3.0.0"
+  }
 }

@@ -37,47 +37,48 @@ export class Database {
     let data = this.#database[table] ?? []; // "??" O operador de coalescência nula (??) é usado para fornecer um valor padrão caso o valor à esquerda do operador seja null ou undefined. Se o valor à esquerda não for null nem undefined, o operador retornará o valor à esquerda.
 
     if (search) {
-      data = data.filter( row => {
+      data = data.filter((row) => {
         return Object.entries(search).some(([key, value]) => {
-          return row[key].toLowerCase().includes(value.toLowerCase())
-      })
-    })
-  } return data;
-}
-
-  delete(table, id) {
-    const rowIndex = this.#database[table].findIndex((row) => row["id"] === id);
-
-    if (rowIndex !== -1) {
-      this.#database[table].splice(rowIndex, 1);
-      this.#persist();
+          return row[key].toLowerCase().includes(value.toLowerCase());
+        });
+      });
     }
+    return data;
   }
 
-  updateData(table, id, title, description, updated_at) {
-    const rowIndex = this.#database[table].findIndex((row) => row["id"] === id);
-
-    if (rowIndex !== -1) {
-      const dataToUpdate = this.#database[table][rowIndex]
-      if (title) {
-        dataToUpdate.title = title;
-      }
-      if (description) {
-        dataToUpdate.description = description;
-      }
-      if (title || description) {
-        dataToUpdate.updated_at = updated_at;
-      }
-      this.#persist();
-    }
+  delete(table, rowIndex) {
+    this.#database[table].splice(rowIndex, 1);
+    this.#persist();
   }
 
-  completeTask(table, id,completed_at) {
-    const rowIndex = this.#database[table].findIndex((row) => row["id"] === id)
-    if (rowIndex !== -1) {
-      const dataToUpdate = this.#database[table][rowIndex]
-      dataToUpdate.completed_at = completed_at
-      this.#persist();
+  updateData(table, rowIndex, title, description, updated_at) {
+    const dataToUpdate = this.#database[table][rowIndex];
+    if (title) {
+      dataToUpdate.title = title;
     }
+    if (description) {
+      dataToUpdate.description = description;
+    }
+    dataToUpdate.updated_at = updated_at;
+    this.#persist();
+  }
+
+  completeTask(table, rowIndex, completed_at) {
+    const dataToUpdate = this.#database[table][rowIndex];
+    if (dataToUpdate.completed_at === null) {
+      dataToUpdate.completed_at = completed_at;
+    } else {
+      dataToUpdate.completed_at = null;
+    }
+    
+    this.#persist();
+  }
+
+  checkId(table, id) {
+    const rowIndex = this.#database[table].findIndex((row) => row["id"] === id);
+    if (rowIndex === -1) {
+      return false;
+    }
+    return rowIndex;
   }
 }

@@ -5,13 +5,13 @@ import { extractQueryParams } from "./utils/extract-query-params.js";
 
 const server = http.createServer(async (req, res) => {
   const { method, url } = req;
+  console.log(method, url)
 
   await json(req, res); // após chamar o json, o objeto req, vai ter recebido o aprametro body
 
   const route = routes.find((route) => {
     return route.method === method && route.path.test(url);
   });
-
   if (route) {
     const routeParams = req.url.match(route.path);
     const { query, ...params } = routeParams.groups;
@@ -31,3 +31,5 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(3335);
 console.log("Servidor Rodando");
+
+

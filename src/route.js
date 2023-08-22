@@ -2,7 +2,9 @@ import { Database } from "./database.js";
 import { randomUUID } from "node:crypto";
 import { buildRoutePath } from "./utils/build-route-path.js";
 
-const currentDate = new Date();
+const currentDate = new Date().toLocaleString("pt-BR", {
+  timeZone: "America/Sao_Paulo",
+});
 const db = new Database() // instanciando o database
 
 export const routes = [
@@ -11,16 +13,20 @@ export const routes = [
     path: buildRoutePath("/tasks"),
     handler: (req, res) => {
       const { title, description } = req.body;
-      const task = {
-        id: randomUUID(),
-        title,
-        description,
-        completed_at: null,
-        created_at: currentDate,
-        updated_at: null,
-      };
-      db.insert("tasks", task);
-      return res.writeHead(201).end();
+      if (title && description) {
+        const task = {
+          id: randomUUID(),
+          title,
+          description,
+          completed_at: null,
+          created_at: currentDate,
+          updated_at: null,
+        };
+        db.insert("tasks", task);
+        return res.writeHead(201).end();
+      } else {
+        return res.writeHead(400).end();
+      }
     },
   },
   {
@@ -45,7 +51,14 @@ export const routes = [
     path: buildRoutePath("/tasks/:id"),
     handler(req, res) {
       const { id } = req.params;
-      db.delete("tasks", id);
+
+      //verificação de ID
+      const rowIndex = db.checkId("tasks", id);
+      if (rowIndex === false) {
+        return res.writeHead(404).end("id não encontrado");
+      }
+
+      db.delete("tasks", rowIndex);
       return res.writeHead(204).end();
     },
   },
@@ -55,15 +68,22 @@ export const routes = [
     handler(req, res) {
       const { id } = req.params;
 
+      //verificação de ID
+      const rowIndex = db.checkId("tasks", id)
+      if (rowIndex === false) {
+        return res.writeHead(404).end("id não encontrado");
+      }
+
+      if (req.body){
       const title = req.body.title ?? null;
       const description = req.body.description ?? null;
 
-      // const {title,description} = req.body
       const updated_at = currentDate;
-      console.log(title);
-      console.log(description);
 
-      db.updateData("tasks", id, title, description, updated_at);
+      db.updateData("tasks", rowIndex, title, description, updated_at);
+      } else {
+        return res.writeHead(400).end();
+      }
       return res.writeHead(204).end();
     },
   },
@@ -72,9 +92,16 @@ export const routes = [
     path: buildRoutePath("/tasks/:id/complete"),
     handler(req, res) {
       const { id } = req.params;
+
+      //verificação de ID
+      const rowIndex = db.checkId("tasks", id);
+      if (rowIndex === false) {
+        return res.writeHead(404).end("id não encontrado");
+      }
+
       const completed_at = currentDate;
 
-      db.completeTask("tasks", id, completed_at);
+      db.completeTask("tasks", rowIndex, completed_at);
       return res.writeHead(204).end();
     },
   },
