@@ -1,19 +1,18 @@
 import http from "node:http";
-import { json } from "./middlewares/json.js"; 
+import { json } from "./middlewares/json.js";
 import { routes } from "./route.js";
 import { extractQueryParams } from "./utils/extract-query-params.js";
 
-const server = http.createServer(async(req, res) => {
-  const {method, url} = req
+const server = http.createServer(async (req, res) => {
+  const { method, url } = req;
 
-  await json(req, res) // após chamar o json, o objeto req, vai ter recebido o aprametro body
-  
-  
-  const route = routes.find(route => {
-    return route.method === method && route.path.test(url)
-  })
+  await json(req, res); // após chamar o json, o objeto req, vai ter recebido o aprametro body
 
-  if (route){
+  const route = routes.find((route) => {
+    return route.method === method && route.path.test(url);
+  });
+
+  if (route) {
     const routeParams = req.url.match(route.path);
     const { query, ...params } = routeParams.groups;
     req.params = params;
@@ -28,7 +27,7 @@ const server = http.createServer(async(req, res) => {
   }
 
   return res.writeHead(404).end("Not Found");
-})
+});
 
-server.listen(3335)
-console.log("Servidor Rodando")
+server.listen(3335);
+console.log("Servidor Rodando");
