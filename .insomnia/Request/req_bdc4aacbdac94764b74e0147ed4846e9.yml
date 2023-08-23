@@ -1,0 +1,27 @@
+_id: req_bdc4aacbdac94764b74e0147ed4846e9
+type: Request
+parentId: fld_ffc1c378e8944d23818197a263c85971
+modified: 1692818327224
+created: 1692818327224
+url: http://localhost:3335/tasks/dba7e180-b109-4083-8f34-9a12c2b45a1e
+name: update_task
+description: ""
+method: PUT
+body:
+  mimeType: ""
+  text: "{\r
+
+    \    \"title\": \"crie uma rota PUT\"\r
+
+    }"
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1692818327224
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

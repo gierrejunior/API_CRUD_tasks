@@ -1,0 +1,27 @@
+_id: req_40d403a852f546948191958bf19facac
+type: Request
+parentId: fld_ffc1c378e8944d23818197a263c85971
+modified: 1692818444966
+created: 1692818327223
+url: http://localhost:3335/tasks
+name: create_task
+description: ""
+method: POST
+body:
+  mimeType: ""
+  text: |-
+    {
+        "title": "crie uma rota DELETE",
+        "description": "crie uma rota dele funcional "
+    }
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1692818327223
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
